@@ -4,37 +4,11 @@ using UnityEngine;
 
 public class BunnyPlayer : MonoBehaviour {
 
-    private Rigidbody2D bunnyBody;
-    public GameObject mySeat;
-    public bool isInAir = true;
-    public int weight;
-    public string seesawSide = "None";
+    private bool hasCarrot = false;
 
 	// Use this for initialization
 	void Start () {
-        // the rigid body of the current bunny
-        bunnyBody = GetComponent<Rigidbody2D>();
-        mySeat = null;
 
-        switch (this.name)
-        {
-            case "Bunny1":
-                this.weight = 1;
-                break;
-            case "Bunny2":
-                this.weight = 2;
-                break;
-            case "Bunny3":
-                this.weight = 3;
-                break;
-            case "Bunny4":
-                this.weight = 4;
-                break;
-            case "Bunny5":
-                this.weight = 5;
-                break;
-
-        }
 		
 	}
 	
@@ -43,59 +17,29 @@ public class BunnyPlayer : MonoBehaviour {
 
     }
 
-    public void touchUp()
+    void OnTriggerEnter2D(Collider2D other)
     {
-        GameObject seesaw = GameObject.FindWithTag("Seesaw");
-
-        if (mySeat != null)
-        { //if the bunny is on a seat, put the bunny on the seesaw
-            Collider2D seatCollider = mySeat.GetComponent<Collider2D>();
-            Debug.Log("bunny is touching the seat: " + seatCollider.transform.name);
-
-            // calculate the weight and determine the seesaw new status
-            if (seatCollider.transform.tag == "LeftSeat")
-            {
-                GlobalVariables.leftWeight += this.weight;
-            }
-            else
-            {
-                GlobalVariables.rightWeight += this.weight;
-            }
-
-            seesaw.GetComponent<Seesaw>().Move();
-
-            //seesawJoint.useMotor = true;
-            this.enabled = true;
-            this.isInAir = false;
-        }
-        else //seatcollider is null
+        if (other.gameObject.CompareTag("Carrot") && !hasCarrot)
         {
-            if (!this.isInAir)
-            {
-                Debug.Log("recalculate the weight on seesaw");
-
-                if (this.seesawSide == "Left")
-                {
-                    GlobalVariables.leftWeight -= this.weight;
-                }
-                else
-                {
-                    GlobalVariables.rightWeight -= this.weight;
-                }
-
-                this.GetComponent<HingeJoint2D>().enabled = false;
-                this.isInAir = true;
-                this.seesawSide = "None";
-
-                seesaw.GetComponent<Seesaw>().Move();
-
-            }
-            else
-            {
-                Debug.Log("just a touch up event");
-            }
+            //Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
+            GlobalVariables.numberOfPickedCarrots++;
+            hasCarrot = true;
+            //GameObject.FindGameObjectWithTag("Basket").GetComponent<SpriteRenderer>().sprite = GlobalVariables.basketSprites[GlobalVariables.numberOfPickedCarrots - 1];
         }
-        //if (touchedBunny.GetComponent<Collider2D>().IsTouching(seatCollider))
+
+        if (other.gameObject.CompareTag("Basket") && GlobalVariables.numberOfPickedCarrots > 0)
+        {
+            //string imagePath = "Sprites/basket-carrot" + GlobalVariables.numberOfPickedCarrots;
+            int thisSprite = GlobalVariables.numberOfPickedCarrots - 1;
+            other.gameObject.GetComponent<SpriteRenderer>().sprite = GlobalVariables.basketSprites[thisSprite];
+            hasCarrot = false;
+            
+        }
+    }
+
+    public void touchUp ()
+    {
 
     }
 
