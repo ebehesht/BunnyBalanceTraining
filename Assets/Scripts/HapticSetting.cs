@@ -31,7 +31,7 @@ public class HapticSetting : MonoBehaviour {
 
         //CreateNoiseTexture(newTexture, imageWidth, imageHeight);
         //CreateStripedTexture(newTexture, imageWidth, imageHeight);
-        CreatePolkaDotTexture(newTexture, imageWidth, imageHeight);
+        //CreatePolkaDotTexture(newTexture, imageWidth, imageHeight);
 
        //Connect to the service and begin intializing the haptic resources.
         InitHaptics();
@@ -161,8 +161,10 @@ public class HapticSetting : MonoBehaviour {
 
         //Retrieve texture data from bitmap.
         string imagePath = "";
+        //imagePath = "Textures/noise/noise_texture3";
+        
         switch (this.gameObject.name)
-
+        
         {
             case "HapticMesh1":
                 imagePath = "Textures/noise/noise_texture4";
@@ -173,7 +175,7 @@ public class HapticSetting : MonoBehaviour {
                 break;
 
             case "HapticMesh3":
-                imagePath = "Textures/noise/noise_texture2";
+                imagePath = "Textures/customized/createdPolkaDotTexture";
                 break;
 
             case "HapticMesh4":
@@ -185,6 +187,8 @@ public class HapticSetting : MonoBehaviour {
                 break;
 
         }
+        
+
 
         /*
         {
